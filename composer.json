@@ -1,5 +1,5 @@
 {
-	"name": "cu-community-apps/cd-events-pull-wp-plugin",
+	"name": "cubear/cd-events-pull-wp-plugin",
 	"description": "A wordpress plugin to pull Events into a WP custom content type.",
 	"type": "wordpress-plugin",
 	"homepage": "https://it.cornell.edu/custom-web",
