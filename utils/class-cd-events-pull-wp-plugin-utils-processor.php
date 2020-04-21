@@ -237,6 +237,7 @@ class Cd_Events_Pull_Wp_Plugin_Utils_Processor {
 				'post_type' => $post_type,
 				'meta_key'  => $event_id,
 				'meta_value' => $t_event->meta_input[ $event_id ],
+				'post_status' => 'any',
 			);
 			$event_query = new WP_Query( $args );
 			if ( ! $event_query->have_posts() ) {
