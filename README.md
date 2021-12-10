@@ -24,5 +24,6 @@ install with composer
         "composer/installers": "^1.9",
         "cubear/cd-events-pull-wp-plugin": "dev-master"
     },
+```
     
-    ## Sites using this plugin.
+## Sites using this plugin.
