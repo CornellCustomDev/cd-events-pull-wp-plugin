@@ -237,7 +237,7 @@ class Cd_Events_Pull_Wp_Plugin_Admin {
 			],
 		);
 
-		// Date Field
+		// Location Field
 		$this->cd_events_pull_add_settings_field(
 			'Location Field of Custom Post ',
 			[
