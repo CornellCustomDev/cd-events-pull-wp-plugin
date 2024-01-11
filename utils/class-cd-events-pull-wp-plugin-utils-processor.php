@@ -87,6 +87,19 @@ class Cd_Events_Pull_Wp_Plugin_Utils_Processor {
 	 * Consider storing to plugin database instead of temporary.
 	 */
 	public function cd_events_pull_get_cron_timer() {
+		$this->write_log( 'cd_events_pull_get_cron_timer started' );
+		$date = current_time( 'timestamp' );
+		$date_str  = date( 'D M d, Y G:i', $date );
+		$this->write_log( 'Info: Last Ran: ' . $date_str );
+		$this->cd_events_pull();
+	}
+
+	/**
+	 * Use this to test with timer on local development.
+	 *
+	 * Consider replacing with CRON clock.
+	 */
+	public function cd_events_pull_loaded_timer() {
 		$data = get_transient( self::$transient_timer_key );
 		$experation = get_option( 'cd_events_pull_timer' );
 		if ( empty( $data ) ) {
@@ -187,6 +200,7 @@ class Cd_Events_Pull_Wp_Plugin_Utils_Processor {
 	 * @param array $events_response The events fetched from cornell calendar.
 	 */
 	private function cd_transform_events( $events_response ) {
+		// $this->write_log( "Info: Starting cd_transform_events." );
 		$post_type = get_option( 'cd_events_pull_post_type' );
 		if ( empty( $post_type ) ) {
 			$this->write_log( 'Warning: custom post type is required' );
@@ -246,6 +260,7 @@ class Cd_Events_Pull_Wp_Plugin_Utils_Processor {
 	 * @param array $t_events The events ready to load.
 	 */
 	private function cd_load_events( $t_events ) {
+		// $this->write_log( "Info: Starting cd_load_events." );
 		$publish   = get_option( 'cd_events_pull_is_publish' ) ? 'publish' : 'draft';
 		$post_type = get_option( 'cd_events_pull_post_type' );
 		$event_id  = get_option( 'cd_events_pull_event_id' ) ?: 'event_id';

@@ -10,7 +10,7 @@
  */
 
  // Required for timer name that is reset on form save.
-require_once plugin_dir_path( dirname( __FILE__ ) ) . 'utils/class-cd-events-pull-wp-plugin-utils-processor.php';
+require_once get_theme_file_path('/functions/post-types/events/plugin/utils/class-cd-events-pull-wp-plugin-utils-processor.php');
 
 /**
  * The admin-specific functionality of the plugin.
@@ -65,12 +65,12 @@ class Cd_Events_Pull_Wp_Plugin_Admin {
 	public function enqueue_scripts() {
 
 		wp_enqueue_script(
-			$this->plugin_name,
-			plugin_dir_url( __FILE__ ) . 'js/cd-events-pull-wp-plugin-admin.js',
-			[ 'jquery' ],
-			$this->version,
-			true
-		);
+		 	$this->plugin_name,
+		 	get_template_directory_uri() . '/functions/post-types/events/plugin/admin/js/cd-events-pull-wp-plugin-admin.js',
+		 	[ 'jquery' ],
+		 	$this->version,
+		 	true
+		 );
 
 	}
 
@@ -139,7 +139,6 @@ class Cd_Events_Pull_Wp_Plugin_Admin {
 	 * Build the settings form.
 	 */
 	public function register_and_build_fields() {
-
 		// reset the clock to force rerun
 		if( isset( $_POST['cd_events_reset_hidden_field'] ) ) {
 			// Used for local dev requires set wp_event
@@ -170,7 +169,8 @@ class Cd_Events_Pull_Wp_Plugin_Admin {
 			[
 				'id' => 'cd_events_pull_url',
 				'required' => 'required',
-				'help_text' => 'Usually: http://events.cornell.edu/api/2.1/events'
+				'help_text' => 'Usually: http://events.cornell.edu/api/2.1/events',
+				'value' => 'http://events.cornell.edu/api/2.1/events',
 			]
 		);
 
@@ -412,6 +412,7 @@ class Cd_Events_Pull_Wp_Plugin_Admin {
 		if( array_key_exists('value', $args) && get_option( $args['id'] ) === false)    // a check that Nothing yet saved
 			update_option( $args['id'], $args['value']);
 	}
+
 	/**
 	 * Renders the form input.
 	 *
