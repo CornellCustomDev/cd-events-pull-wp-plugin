@@ -287,7 +287,7 @@ class Cd_Events_Pull_Wp_Plugin_Utils_Processor {
 				}
 			}
 
-			if(count($t_event->tags) > 0){
+			if(count($t_event->tags) > 0 && taxonomy_exists('event_tags')) {
 				$this->write_log( 'info-tags:  ' . implode(", ",$t_event->tags)  );
 				foreach ($t_event->tags as $term) {
 					$this->set_post_term( $post_id, $term, 'event_tags' );
@@ -297,7 +297,7 @@ class Cd_Events_Pull_Wp_Plugin_Utils_Processor {
 				$this->write_log( 'info-tags:  ' . 'no tags'  );
 			}
 
-			if(!empty($t_event->departments)) {
+			if(!empty($t_event->departments && taxonomy_exists('programs-and-institutes'))) {
 				foreach ($t_event->departments as $term) {					
 					// $this->write_log( 'departments for this event:  ' . $term->name . "(" . $term->id . ")"  );
 					$this->set_post_term( $post_id, $term->name, 'programs-and-institutes' );
