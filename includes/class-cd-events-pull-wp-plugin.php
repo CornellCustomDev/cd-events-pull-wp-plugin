@@ -169,7 +169,27 @@ class Cd_Events_Pull_Wp_Plugin {
 
 		$plugin_admin = new Cd_Events_Pull_Wp_Plugin_Utils_Processor( $this->get_plugin_name(), $this->get_version() );
 		// The magic.
-		$this->loader->add_action( 'wp_loaded', $plugin_admin, 'cd_events_pull_get_cron_timer' );
+		// $this->loader->add_action( 'wp_loaded', $plugin_admin, 'cd_events_pull_get_cron_timer' );
+		$this->loader->add_action( 'cd_events_pull_cron_hook', $plugin_admin, 'cd_events_pull_get_cron_timer' );
+		/**
+		 * Sets a cron timer.
+		 *
+		 * @param array $schedules The cron scheduler.
+		 * @return array
+		 */
+		function cd_events_pull_cron_interval( $schedules ) {
+			$timer_interval = get_option( 'cd_events_pull_timer' );
+			$schedules['cd_events_pull_timer_interval'] = [
+				'interval' => $timer_interval,
+				'display'  => "Every $timer_interval seconds",
+			];
+			return $schedules;
+		}
+		add_filter( 'cron_schedules', 'cd_events_pull_cron_interval' );
+
+		if ( ! wp_next_scheduled( 'cd_events_pull_cron_hook' ) ) {
+			wp_schedule_event( time(), 'cd_events_pull_timer_interval', 'cd_events_pull_cron_hook' );
+		}
 	}
 
 	/**

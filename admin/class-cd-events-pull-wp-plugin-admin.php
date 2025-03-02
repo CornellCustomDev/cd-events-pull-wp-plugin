@@ -10,7 +10,7 @@
  */
 
  // Required for timer name that is reset on form save.
-require_once plugin_dir_path( dirname( __FILE__ ) ) . 'utils/class-cd-events-pull-wp-plugin-utils-processor.php';
+require_once get_theme_file_path('/functions/post-types/events/plugin/utils/class-cd-events-pull-wp-plugin-utils-processor.php');
 
 /**
  * The admin-specific functionality of the plugin.
@@ -65,12 +65,12 @@ class Cd_Events_Pull_Wp_Plugin_Admin {
 	public function enqueue_scripts() {
 
 		wp_enqueue_script(
-			$this->plugin_name,
-			plugin_dir_url( __FILE__ ) . 'js/cd-events-pull-wp-plugin-admin.js',
-			[ 'jquery' ],
-			$this->version,
-			true
-		);
+		 	$this->plugin_name,
+		 	get_template_directory_uri() . '/functions/post-types/events/plugin/admin/js/cd-events-pull-wp-plugin-admin.js',
+		 	[ 'jquery' ],
+		 	$this->version,
+		 	true
+		 );
 
 	}
 
@@ -139,9 +139,9 @@ class Cd_Events_Pull_Wp_Plugin_Admin {
 	 * Build the settings form.
 	 */
 	public function register_and_build_fields() {
-
 		// reset the clock to force rerun
 		if( isset( $_POST['cd_events_reset_hidden_field'] ) ) {
+			// Used for local dev requires set wp_event
 			$transient_key = Cd_Events_Pull_Wp_Plugin_Utils_Processor::$transient_timer_key;
 			set_transient($transient_key, false);
 		}
@@ -169,7 +169,8 @@ class Cd_Events_Pull_Wp_Plugin_Admin {
 			[
 				'id' => 'cd_events_pull_url',
 				'required' => 'required',
-				'help_text' => 'Usually: http://events.cornell.edu/api/2.1/events'
+				'help_text' => 'Usually: http://events.cornell.edu/api/2.1/events',
+				'value' => 'http://events.cornell.edu/api/2.1/events',
 			]
 		);
 
@@ -201,6 +202,16 @@ class Cd_Events_Pull_Wp_Plugin_Admin {
 			]
 		);
 
+		// Tags
+		// $this->cd_events_pull_add_settings_field(
+		// 	'Tags',
+		// 	[
+		// 		'id' => 'cd_events_pull_tags',
+		// 		'help_text' => 'Filter by tag. Note Department IDs and Tags are compounding(AND) filters(only supports one tag)',
+		// 	]
+		// );
+
+
 		add_settings_section(
 			'cd_events_pull_fields_section',
 			'Field Mapping Section (Transform):',
@@ -216,7 +227,9 @@ class Cd_Events_Pull_Wp_Plugin_Admin {
 			[
 				'id' => 'cd_events_pull_post_type',
 				'section' => 'cd_events_pull_fields_section',
-			],
+				'value' => 'events',
+				// 'class' => 'hidden',
+			]
 		);
 
 		// Title Field
@@ -225,7 +238,8 @@ class Cd_Events_Pull_Wp_Plugin_Admin {
 			[
 				'id' => 'cd_events_pull_title',
 				'section' => 'cd_events_pull_fields_section',
-			],
+				'value' => 'title',
+			]
 		);
 
 		// Date Field
@@ -234,16 +248,18 @@ class Cd_Events_Pull_Wp_Plugin_Admin {
 			[
 				'id' => 'cd_events_pull_date',
 				'section' => 'cd_events_pull_fields_section',
-			],
+				'value' => 'date',
+			]
 		);
 
-		// Date Field
+		// Location Field
 		$this->cd_events_pull_add_settings_field(
 			'Location Field of Custom Post ',
 			[
 				'id' => 'cd_events_pull_location',
 				'section' => 'cd_events_pull_fields_section',
-			],
+				'value' => 'location',
+			]
 		);
 
 		// Description Field
@@ -252,7 +268,8 @@ class Cd_Events_Pull_Wp_Plugin_Admin {
 			[
 				'id' => 'cd_events_pull_description',
 				'section' => 'cd_events_pull_fields_section',
-			],
+				'value' => 'description',
+			]
 		);
 
 		// Image Field
@@ -262,7 +279,8 @@ class Cd_Events_Pull_Wp_Plugin_Admin {
 				'id' => 'cd_events_pull_image',
 				'section' => 'cd_events_pull_fields_section',
 				'help_text' => 'The URL of the image hosted on localist',
-			],
+				'value' => 'photo_url',
+			]
 		);
 
 		// Image Field
@@ -271,7 +289,8 @@ class Cd_Events_Pull_Wp_Plugin_Admin {
 			[
 				'id' => 'cd_events_pull_start_time',
 				'section' => 'cd_events_pull_fields_section',
-			],
+				'value' => 'start_time',
+			]
 		);
 
 		// Publish Field
@@ -280,7 +299,8 @@ class Cd_Events_Pull_Wp_Plugin_Admin {
 			[
 				'id' => 'cd_events_pull_is_all_day',
 				'section' => 'cd_events_pull_fields_section',
-			],
+				'value' => 'is_all_day',
+			]
 		);
 
 		// Publish Field
@@ -289,7 +309,8 @@ class Cd_Events_Pull_Wp_Plugin_Admin {
 			[
 				'id' => 'cd_events_pull_localist_url',
 				'section' => 'cd_events_pull_fields_section',
-			],
+				'value' => 'event_url',
+			]
 		);
 
 		// ID Field
@@ -298,6 +319,7 @@ class Cd_Events_Pull_Wp_Plugin_Admin {
 			[
 				'id' => 'cd_events_pull_event_id',
 				'section' => 'cd_events_pull_fields_section',
+				'value' => 'event_id',
 			],
 		);
 
@@ -319,7 +341,8 @@ class Cd_Events_Pull_Wp_Plugin_Admin {
 				'subtype' => 'checkbox',
 				'section' => 'cd_events_pull_publishing_section',
 				'help_text' => 'Does not affect publish status',
-			],
+				'value' => 'true',
+			]
 		);
 
 		// Publish Field
@@ -329,7 +352,8 @@ class Cd_Events_Pull_Wp_Plugin_Admin {
 				'id' => 'cd_events_pull_is_publish',
 				'subtype' => 'checkbox',
 				'section' => 'cd_events_pull_publishing_section',
-			],
+				'value' => 'true',
+			]
 		);
 
 		// Image Field
@@ -345,14 +369,16 @@ class Cd_Events_Pull_Wp_Plugin_Admin {
 				// 'min_value' => 30,
 				// 'max_value' => 86400,
 				// 'step' => 30,
-				'required' => 'required'
-			],
+				'required' => 'required',
+				'value' => '3600',
+			]
 		);
 
 		register_setting( 'cd_events_pull_general_settings', 'cd_events_pull_url');
 		register_setting( 'cd_events_pull_general_settings', 'cd_events_pull_count');
 		register_setting( 'cd_events_pull_general_settings', 'cd_events_pull_department_ids');
 		register_setting( 'cd_events_pull_general_settings', 'cd_events_pull_keyword');
+		// register_setting( 'cd_events_pull_general_settings', 'cd_events_pull_tags');
 		register_setting( 'cd_events_pull_general_settings', 'cd_events_pull_post_type');
 		register_setting( 'cd_events_pull_general_settings', 'cd_events_pull_title');
 		register_setting( 'cd_events_pull_general_settings', 'cd_events_pull_date');
@@ -372,7 +398,7 @@ class Cd_Events_Pull_Wp_Plugin_Admin {
 	}
 
 	public function cd_events_pull_add_settings_field( String $label, Array $args) {
-		$section = ( ! empty( $args['section']) ? $args['section'] : 'cd_events_pull_general_section' );
+		$section = ( !empty( $args['section']) ? $args['section'] : 'cd_events_pull_general_section' );
 		add_settings_field(
 			$args['id'],
 			$label,
@@ -380,8 +406,13 @@ class Cd_Events_Pull_Wp_Plugin_Admin {
 			'cd_events_pull_general_settings',
 			$section,
 			$args,
+			
 		);
+		// Set default values
+		if( array_key_exists('value', $args) && get_option( $args['id'] ) === false)    // a check that Nothing yet saved
+			update_option( $args['id'], $args['value']);
 	}
+
 	/**
 	 * Renders the form input.
 	 *
